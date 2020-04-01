@@ -44,7 +44,7 @@ export const GetOrganizationByIdHandler =  asyncHandler(async (req, res, next) =
 export const UpdateOrganizationByIdHandler = asyncHandler( async (req, res, next) => {
     const newObject = {orgName: req.body.organizationName};
     const id = req.params.id;
-    const addStatus = await Permission.findOneAndReplace({ _id: id}, {...newObject});
+    const addStatus = await Organization.findOneAndReplace({ _id: id}, {...newObject});
     res.status(201).json({success: true, data: addStatus})
     res.send('Get Organization Handler Called');
 });
@@ -54,6 +54,6 @@ export const UpdateOrganizationByIdHandler = asyncHandler( async (req, res, next
 // @url /Organization/:id
 export const DeleteOrganizationByIdHandler = asyncHandler( async (req, res, next) => {
     const id = req.params.id;
-    const addStatus = await Team.deleteOne({ _id: id});
+    const addStatus = await Organization.deleteOne({ _id: id});
     res.status(200).json({success: true, message: `Successfully deleted ${id}`})
 });
