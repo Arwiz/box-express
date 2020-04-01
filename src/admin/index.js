@@ -2,7 +2,6 @@ import organizationRouter from './admin-router';
 import permissionRouter from './permission-router';
 import projectRouter from './project-router';
 import teamRouter from './team-router';
-import {authRouter, userRouter} from "../auth";
 
 export default (app)=> {
     app.use('/api/v1/projects', projectRouter);
