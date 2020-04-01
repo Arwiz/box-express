@@ -9,6 +9,13 @@ const TeamSchema = new Schema({
         trim: true,
         unique: true,
     },
+    teamId:  {
+        type: String,
+        required:[true,' Please add team Id'],
+        maxLength:[50, 'Team Id can not exceed more then 50 Characters'],
+        trim: true,
+        unique: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now

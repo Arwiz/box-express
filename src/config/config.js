@@ -4,5 +4,4 @@ const config = {
     dbConnection: process.env.DB_CONNECTION_STRING || 'mongodb+srv://arwiz:Wizni@123@cluster0-lvv9l.mongodb.net/boxeyedb?retryWrites=true&w=majority',
     secretHashKey: 'iloveindia'
 };
-
 export default config ;

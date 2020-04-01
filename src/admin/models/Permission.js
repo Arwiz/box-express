@@ -9,6 +9,13 @@ const PermissionSchema = new Schema({
         trim: true,
         unique: true,
     },
+    permissionId:  {
+        type: String,
+        required:[true,' Please add permission Id'],
+        maxLength:[50, 'Id can not Exceed more then 50 Characters'],
+        trim: true,
+        unique: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now
