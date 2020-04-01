@@ -1,6 +1,6 @@
 import app from "./app";
-import config from "../config/config"
-import createDBConnection from "../config/db";
+import config from "./config/config"
+import createDBConnection from "./config/db";
 
 // Connection To Database
 const dbConnectionStart = createDBConnection();

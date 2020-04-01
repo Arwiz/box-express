@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import config from "../../../config/config";
+import config from "../../config/config";
 const secret = config.secretHashKey;
 export default async (simpleString) => {
     if(simpleString){
