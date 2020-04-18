@@ -3,6 +3,7 @@ import errorHandler from "./shared/middleware/errorHandler";
 import adminRouts from "./admin";
 import authRoutes from "./auth";
 import mongoSanitize from 'express-mongo-sanitize'
+import xss from 'xss-clean';
 
 import cors from 'cors'
 const app = new express();
@@ -13,6 +14,11 @@ app.use(cors());
 
 // Remove any keys containing prohibited characters
 app.use(mongoSanitize());
+
+
+// XSS
+/* make sure this comes before any routes */
+app.use(xss());
 
 // @desc Health Check API
 app.get('/', function (req, res) {
