@@ -1,6 +1,19 @@
 /* ****************************************************************************
 *  Model Handler : MetaModules
+*
+*
 ******************************************************************************/
+// @flow
+// 1)  Get All Meta Modules
+// 2)  Create Meta Modules
+// 3)  Delete All Meta Modules
+
+// 4)  Put Publish Meta Module
+// 5)  Get All Meta Modules
+
+// 7) Put meta module by Id
+// 7) Delete particular meta module by Id
+
 
 import asyncHandler from "../../shared/middleware/asyncHandler";
 import {MetaModule, ModuleStatus} from '../../shared'
@@ -8,7 +21,6 @@ import schemaDesignFromMetaModule from "../../shared/helpers/schema.helper";
 import mongoose from "mongoose";
 import {fullCamelCase} from "../../shared/helpers/util.fun";
 import pluralize from 'pluralize';
-
 
 // @desc  Get All schemas
 // @method GET
@@ -37,47 +49,38 @@ export const CreateMetaModules = asyncHandler(async (req, res, next) => {
     }
 });
 
+// @desc  All MetaModules
+// @method DELETE
+// @url /schemas
+
 export const ClearAllMetaModules = asyncHandler(async (req, res, next) => {
-    if (req.body) {
         const addStatus = await MetaModule.deleteMany();
         res.status(200).json({success: true, data: addStatus})
-    } else {
-        next(Error('Please provide data'));
-    }
 });
 
 
+
+// @desc  All MetaModules
+// @method PUT
+// @url /metamodules/publish/:id
 export const PublishTheModule = asyncHandler(async (req, res, next) => {
     if (req.body) {
         const id = req.params.id;
-        const metaModule = await MetaModule.findById(id);
-        if (metaModule.status !== 'PUBLISHED') {
-            const schema = schemaDesignFromMetaModule(metaModule);
-
-            const addStatus = await ModuleStatus.create({
-                clientId: metaModule.clientId,
-                moduleName: metaModule.moduleName,
-                moduleId: metaModule.moduleId,
-                moduleSchema: JSON.stringify(schema),
-                status: 'PUBLISHED'
-            });
-            res.status(201).json({success: true, data: addStatus})
+        const status = req.body.status;
+        const foundDataModel = await MetaModule.findById(id);
+        const sch =  schemaDesignFromMetaModule(foundDataModel);
+        const checkedThenGetDynamicModule = await mongoose.models[foundDataModel.moduleName] || await mongoose.model(foundDataModel.moduleName, sch);
+        let updateStatus =  false;
+        if(checkedThenGetDynamicModule){
+             updateStatus = await foundDataModel.updateOne({_id: id}, { $set: { status: status } });
         }
-        res.status(201).json({success: true, message: 'Already Published'});
+        // Update all documents in the `mymodels` collection
+        res.status(201).json({success: true, data: updateStatus})
     } else {
-        next(Error('Please provide data'));
+        next(Error('Please provide data..!'));
     }
 });
 
-
-export const ClearPublishModule = asyncHandler(async (req, res, next) => {
-    if (req.body) {
-        const addStatus = await ModuleStatus.deleteMany();
-        res.status(200).json({success: true, data: addStatus})
-    } else {
-        next(Error('Please provide data'));
-    }
-});
 
 //
 // /*  Update/Delete with ID*/
@@ -94,21 +97,19 @@ export const GetMetaModulesByIdHandler = asyncHandler(async (req, res, next) => 
 
 // @desc Update Handler Function
 // @method PUT
-// @url /schemas/:id
+// @url /metamodules/:id
 export const UpdateMetaModulesByIdHandler = asyncHandler(async (req, res, next) => {
-
     const {clientId, moduleId, moduleName, fields} = req.body;
     const newObject = {clientId, moduleId, moduleName, fields}
     const id = req.params.id;
-
     const addStatus = await MetaModule.findOneAndReplace({_id: id}, {...newObject});
     res.status(201).json({success: true, data: addStatus})
 });
 
-//
+
 // // @desc  Delete Handler Function
 // // @method delete
-// // @url /schemas/:id
+// // @url /metamodules/:id
 export const DeleteMetaModulesByIdHandler = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const addStatus = await MetaModule.deleteOne({_id: id});

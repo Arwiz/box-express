@@ -5,6 +5,7 @@
 import asyncHandler from "../../shared/middleware/asyncHandler";
 import {MetaModule, ModuleStatus} from '../../shared'
 import mongoose from "mongoose";
+import schemaDesignFromMetaModule, {getDynamicModuleByUrl} from "../../shared/helpers/schema.helper";
 
 
 // @desc  Get All schemas
@@ -20,14 +21,13 @@ export const GetDataFromDynamicModule = asyncHandler(async (req, res, next) => {
     let dataUrl =  req.url;
     dataUrl = dataUrl.replace(/\//gi,'');
     // Get The schema from the Collection
-    let moduleData =  await ModuleStatus.find({ moduleName: dataUrl});
-    // Call Dynamic
-
-    const sch =  JSON.parse(moduleData.moduleSchema);
-    let dynamicModuleFound =  await mongoose.model(moduleData.moduleName,sch);
-     // Get All result
-     const results  = dynamicModuleFound.find({});
-    res.status(200).json({success: true, data: results});
+    const foundModel =  await getDynamicModuleByUrl(dataUrl);
+    if(foundModel){
+        const results = await foundModel.find({});
+        res.status(200).json({success: true, data: results});
+    }else{
+        next(Error('Module not available or Not published'));
+    }
 });
 
 
@@ -42,16 +42,18 @@ export const InsertDataInDynamicModule = asyncHandler(async (req, res, next) => 
         let dataUrl =  req.url;
         dataUrl = dataUrl.replace(/\//gi,'');
         // Get The schema from the Collection
-        let moduleData =  await ModuleStatus.find({ moduleId: dataUrl});
+        let moduleData =  await MetaModule.find({ moduleId: dataUrl});
 
         if(moduleData && moduleData.length>0){
             const foundDataModel = moduleData[0];
             // Call Dynamic
-            const sch =  JSON.parse(foundDataModel.moduleSchema);
-            console.log(sch);
-
-            let dynamicModuleFound =  await mongoose.model(foundDataModel.moduleName, sch);
-            const addStatus = await dynamicModuleFound.create(row);
+            const sch =  schemaDesignFromMetaModule(foundDataModel);
+            const checkedThenGetDynamicModule = mongoose.models[foundDataModel.moduleName];
+            if(!checkedThenGetDynamicModule){
+                next(Error('Module is not published..!'));
+                return;
+            }
+            const addStatus = await checkedThenGetDynamicModule.create(row);
             res.status(201).json({success: true, data: addStatus})
         }
         else

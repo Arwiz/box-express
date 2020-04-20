@@ -7,6 +7,7 @@ import xss from 'xss-clean';
 
 import cors from 'cors'
 const app = new express();
+import swaggerConfigre from './swagger.injector'
 
 // Body Parser
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(mongoSanitize());
 /* make sure this comes before any routes */
 app.use(xss());
 
+
 // @desc Health Check API
 app.get('/', function (req, res) {
     res.send('Health Check Fine')
@@ -32,5 +34,8 @@ adminRouts(app);
 
 // Add Error Middleware
 app.use(errorHandler);
+
+// Call swagger configuration
+swaggerConfigre(app);
 
 export default app;

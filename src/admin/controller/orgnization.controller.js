@@ -8,6 +8,17 @@ import {Organization } from '../models'
 // @desc  Get All Organization
 // @method GET
 // @url /Organization
+
+/**
+ * @swagger
+ * /abcdef:
+ *  get:
+ *    description: Use to request all customers
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
+
 export const GetAllOrganizationsHandler = asyncHandler(async (req, res, next) => {
     const results = await Organization.find();
     res.status(200).json({success: true, data: results});

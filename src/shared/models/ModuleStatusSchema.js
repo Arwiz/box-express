@@ -18,9 +18,6 @@ const ModuleStatusSchema = new Schema({
         trim: true,
         unique: true
     },
-    moduleSchema:  {
-        type: Schema.Types.Object
-    },
     status: {
         type: String,
         required: [true, 'Please add status'],

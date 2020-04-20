@@ -7,7 +7,7 @@ import {
     UpdateMetaModulesByIdHandler,
     DeleteMetaModulesByIdHandler,
     ClearAllMetaModules,
-    ClearPublishModule
+    UnpublishedModule
 } from "./controller/meta.module.controller";
 
 const router = express.Router();
@@ -18,12 +18,8 @@ router.route('/')
     .post(CreateMetaModules)
     .delete(ClearAllMetaModules)
 
-router.route('/publish')
-    .delete(ClearPublishModule)
-
 router.route('/publish/:id')
-    .get(PublishTheModule)
-
+    .put(PublishTheModule)
 
 router.route('/:id')
     .get(GetMetaModulesByIdHandler)

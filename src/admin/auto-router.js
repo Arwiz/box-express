@@ -6,7 +6,9 @@ import {
 } from "./controller/auto.controller";
 const router = express.Router();
 
+
 // Find route and put handler
+
 router.route('/')
     .get(GetAllMetaModules)
     //.post(CreateMetaModuleData)

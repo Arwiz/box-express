@@ -1,76 +1,78 @@
 import mongoose from 'mongoose';
 import {dataTypes} from "../models/data";
+import {MetaModule} from "../index";
 const Schema = mongoose.Schema;
 
+// Create Schema by Meta module fields
 function schemaDesignFromMetaModule(metamodule) {
-
-    console.log(metamodule);
     const collectionName = metamodule.moduleName;
-    console.log(collectionName);
-    const schema = {};
-    schema['clientId'] = {
-        type: Schema.Types.ObjectId,
-        required: true
+    let schema = {
+        clientId: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
+        projectId: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
+        moduleId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        }
     };
-    schema['projectId'] = {
-        type: Schema.Types.ObjectId,
-        required: true
-    };
-    schema['moduleId'] = {
-        type: Schema.Types.ObjectId,
-        required: true
-    }
-    metamodule.fields.forEach(field => {
-        console.log(JSON.stringify(generateField(field)));
-        schema[field.fieldId] = generateField(field);
+    metamodule.fields.forEach((fieldObj) => {
+        const obj = {};
+        schema[fieldObj.fieldId] = generateField(fieldObj);
     });
     return new Schema(schema);
-    // return new Schema(schema,{
-    //     toObject: {
-    //         transform: function (doc, ret) {
-    //             delete ret._id;
-    //         }
-    //     },
-    //     toJSON: {
-    //         transform: function (doc, ret) {
-    //             delete ret._id;
-    //         }
-    //     }
-    // });
 }
 
 function generateField(field) {
     let obj = {};
-    obj = {...obj,  ...getSchemaType(field.fieldType)};
-    obj['required'] = field.required ? field.required :  undefined;
+    obj = {...obj, ...getSchemaType(field.fieldType)};
+    obj['required'] = field.required ? field.required : undefined;
     return obj;
 }
 
-function  getSchemaType(schemaType) {
+function getSchemaType(schemaType) {
     switch (schemaType) {
         case dataTypes.TEXT:
-            return { type: String};
+            return {type: 'String'};
             break
         case dataTypes.BOOLEAN:
-            return  { type: Boolean}
+            return {type: 'Boolean'}
             break
         case dataTypes.DATE:
-            return { type: Date};
+            return {type: 'Date'};
             break
         case dataTypes.INTEGER:
         case dataTypes.COST:
-            return { type: Number};
+            return {type: 'Number'};
             break
         case dataTypes.MULTI_SELECT:
         case dataTypes.SINGLE_SELECT:
-            return  { type: Map};
+            return {type: 'Map'};
             break
         default:
-            return null;
-            break;
+            return {type: 'String'};
+            break
     }
     return;
 }
 
 
+// Get Dynamic Model by url/ moduleId plural
+async function  getDynamicModuleByUrl(moduleId) {
+    // Call Dynamic
+    let moduleData = await MetaModule.find({moduleId: moduleId});
+    if (moduleData && moduleData.length > 0) {
+        const foundDataModel = moduleData[0];
+        const sch =  schemaDesignFromMetaModule(foundDataModel);
+        const foundModel =  await mongoose.models[foundDataModel.moduleName] || await mongoose.model(foundDataModel.moduleName, sch);
+        return foundModel;
+    }
+    return null;
+}
+
 export default schemaDesignFromMetaModule;
+export {getDynamicModuleByUrl};
