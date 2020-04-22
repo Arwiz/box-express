@@ -16,7 +16,7 @@
 
 
 import asyncHandler from "../../shared/middleware/asyncHandler";
-import {MetaModule, ModuleStatus} from '../../shared'
+import {MetaModule, ModuleStatus} from '../models'
 import schemaDesignFromMetaModule from "../../shared/helpers/schema.helper";
 import mongoose from "mongoose";
 import {fullCamelCase} from "../../shared/helpers/util.fun";
@@ -115,4 +115,3 @@ export const DeleteMetaModulesByIdHandler = asyncHandler(async (req, res, next) 
     const addStatus = await MetaModule.deleteOne({_id: id});
     res.status(200).json({success: true, message: `Successfully deleted ${id}`})
 });
-

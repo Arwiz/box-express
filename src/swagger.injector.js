@@ -2,6 +2,7 @@
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
+import swaggerFile from './swagger.api.json';
 export default (application) => {
 // Swagger Cofiguration
     const swaggerOptions = {
@@ -15,8 +16,8 @@ export default (application) => {
                 servers: ["http://localhost:8080"]
             }
         },
-        apis: ['./src/app.js', './src/admin/controller/*.controller.js',]
+        apis: ['./src/app.js', './src/admin/controller/*.controller.js']
     };
     const swaggerDocs = swaggerJsDoc(swaggerOptions);
-    application.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+    application.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 }

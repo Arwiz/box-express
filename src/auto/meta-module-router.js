@@ -6,8 +6,7 @@ import {
     GetMetaModulesByIdHandler,
     UpdateMetaModulesByIdHandler,
     DeleteMetaModulesByIdHandler,
-    ClearAllMetaModules,
-    UnpublishedModule
+    ClearAllMetaModules
 } from "./controller/meta.module.controller";
 
 const router = express.Router();

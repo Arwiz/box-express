@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import {dataTypes} from "../models/data";
-import {MetaModule} from "../index";
+import {MetaModule} from "../../auto/models";
 const Schema = mongoose.Schema;
 
 // Create Schema by Meta module fields
@@ -73,6 +73,44 @@ async function  getDynamicModuleByUrl(moduleId) {
     }
     return null;
 }
+
+async function normalizeAutoGeneration(dataUrl, methodType, payload) {
+    // Get The schema from the Collection
+    // let moduleData = await MetaModule.find({moduleId: dataUrl});
+    // if (moduleData && moduleData.length > 0) {
+    //     const foundDataModel = moduleData[0];
+    //     // Call Dynamic
+    //     const sch = schemaDesignFromMetaModule(foundDataModel);
+    //     const checkedThenGetDynamicModule = mongoose.models[foundDataModel.moduleName];
+    //     if (!checkedThenGetDynamicModule) {
+    //         next(Error('Module is not published..!'));
+    //         return;
+    //     }
+    //     switch (methodType) {
+    //         case 'POST':
+    //             return  await checkedThenGetDynamicModule.create(payload);
+    //             return addStatus;
+    //             break
+    //         case 'GET':
+    //             const addStatus = await checkedThenGetDynamicModule.create(payload);
+    //             return addStatus;
+    //         case 'PUT':
+    //             const addStatus = await checkedThenGetDynamicModule.update(payload);
+    //             return addStatus;
+    //         case 'DELETE':
+    //             const addStatus = await checkedThenGetDynamicModule.create(payload);
+    //             return addStatus;
+    //
+    //     }
+    //
+    //     }
+
+
+}
+
+
+
+
 
 export default schemaDesignFromMetaModule;
 export {getDynamicModuleByUrl};

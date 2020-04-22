@@ -7,7 +7,7 @@ import xss from 'xss-clean';
 
 import cors from 'cors'
 const app = new express();
-import swaggerConfigre from './swagger.injector'
+import swaggerInjection from './swagger.injector'
 
 // Body Parser
 app.use(express.json());
@@ -36,6 +36,6 @@ adminRouts(app);
 app.use(errorHandler);
 
 // Call swagger configuration
-swaggerConfigre(app);
+swaggerInjection(app);
 
 export default app;
