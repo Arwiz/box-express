@@ -2,11 +2,17 @@ import express from 'express';
 import errorHandler from "./shared/middleware/errorHandler";
 import adminRouts from "./admin";
 import authRoutes from "./auth";
+import autoRoutes from "./auto"
 import mongoSanitize from 'express-mongo-sanitize'
 import xss from 'xss-clean';
+import logger from 'morgan';
+
+// import createError from 'http-errors'
+
 
 import cors from 'cors'
 const app = new express();
+app.use(logger('dev'));
 import swaggerInjection from './swagger.injector'
 
 // Body Parser
@@ -31,6 +37,8 @@ app.get('/', function (req, res) {
 authRoutes(app);
 // Set up Admin routes
 adminRouts(app);
+// Auto Routes
+autoRoutes(app);
 
 // Add Error Middleware
 app.use(errorHandler);

@@ -8,7 +8,7 @@ import encrypt from '../../shared/helpers/encryption.helper'
 // @route
 // @access
 
-export const CreateUserHandler =  asyncHandler( async ( req, res, next)=> {
+export const CreateUserHandler =  asyncHandler( async ( req, res)=> {
         let { firstName, lastName, email, roles, password } = req.body;
         //password = await encrypt(password) ;
         const  user = {firstName, lastName, email, roles , password};
@@ -17,9 +17,10 @@ export const CreateUserHandler =  asyncHandler( async ( req, res, next)=> {
 });
 
 // @desc  Add User Handler Function
-export const GetAllUsersHandler =  async ( req, res, next)=> {
+export const GetAllUsersHandler =  async ( req, res)=> {
     try {
-        const results = await User.find();
+        const results = await User.find({});
+        console.log(results);
         res.status(200).json({success: true, data: results})
     } catch (e) {
         res.status(400).json({success: false, message: e.message})

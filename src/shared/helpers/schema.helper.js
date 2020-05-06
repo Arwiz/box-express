@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {dataTypes} from "../models/data";
 import {MetaModule} from "../../auto/models";
+import {EN_ModuleStatus} from "../../auto/models/app-data";
 const Schema = mongoose.Schema;
 
 // Create Schema by Meta module fields
@@ -67,9 +68,11 @@ async function  getDynamicModuleByUrl(moduleId) {
     let moduleData = await MetaModule.find({moduleId: moduleId});
     if (moduleData && moduleData.length > 0) {
         const foundDataModel = moduleData[0];
-        const sch =  schemaDesignFromMetaModule(foundDataModel);
-        const foundModel =  await mongoose.models[foundDataModel.moduleName] || await mongoose.model(foundDataModel.moduleName, sch);
-        return foundModel;
+        if(foundDataModel.status === EN_ModuleStatus.PUBLISHED)  {
+            const sch =  schemaDesignFromMetaModule(foundDataModel);
+            const foundModel =  await mongoose.models[foundDataModel.moduleName] || await mongoose.model(foundDataModel.moduleName, sch);
+            return foundModel;
+        }
     }
     return null;
 }

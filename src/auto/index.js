@@ -1,4 +1,4 @@
-import autoRouter from '.auto-router';
+import autoRouter from './auto-router';
 import metaModuleRouter from './meta-module-router';
 
 export default (app)=> {

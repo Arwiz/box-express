@@ -6,12 +6,11 @@ const router = express.Router();
 // Find route and put handler
 router.route('/login').post(loginHandler)
 
-router.use(protect);
+// router.use(protect);
+
 // Find route and put handler
 router.route('/')
     .get(GetAllUsersHandler)
-    .post(CreateUserHandler)
-
 
 router.route('/:id')
     .get(GetUserByIdHandler)

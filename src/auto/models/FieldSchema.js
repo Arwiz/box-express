@@ -31,15 +31,15 @@ const FieldSchema = new Schema({
         type: [OptionSchema]
     },
     required: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     createdAt: {
         type: Date,
         default: Date.now
     },
     createdBy: {
-        type: String,
-        // default: Date.now
+        type: String
     },
 }, {
     versionKey: false

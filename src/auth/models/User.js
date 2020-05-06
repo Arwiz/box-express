@@ -1,20 +1,21 @@
 import mongoose from 'mongoose';
-import * as  bcrypt  from 'bcrypt';
+import * as  bcrypt from 'bcrypt';
 import crypto from 'crypto';
 const Schema = mongoose.Schema;
 import jwt from 'jsonwebtoken';
+import config from "../../config/config";
 
 const UserSchema = new Schema({
-    firstName:  {
+    firstName: {
         type: String,
-        required:[true,' Please add first Name'],
-        maxLength:[50, 'Name can not Exceed more then 50 Characters'],
+        required: [true, ' Please add first Name'],
+        maxLength: [50, 'Name can not Exceed more then 50 Characters'],
         trim: true
     },
-    lastName:  {
+    lastName: {
         type: String,
-        required:[true,' Please add first Name'],
-        maxLength:[50, 'Name can not Exceed more then 50 Characters'],
+        required: [true, ' Please add first Name'],
+        maxLength: [50, 'Name can not Exceed more then 50 Characters'],
         trim: true
     },
     email: {
@@ -36,7 +37,7 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    roles:[String],
+    roles: [String],
     createdAt: {
         type: Date,
         default: Date.now
@@ -48,7 +49,7 @@ const UserSchema = new Schema({
 });
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();
     }
@@ -56,21 +57,31 @@ UserSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
+// Encrypt password using bcrypt
+UserSchema.pre('insertMany', async function (next, docs) {
+    for (let i = 0; i < docs.length; i++) {
+        const user = docs[i];
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+    }
+    next();
+});
+
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function(enteredPassword) {
+UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
 
 // Sign JWT and return
-UserSchema.methods.getSignedJwtToken = function() {
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE
+UserSchema.methods.getSignedJwtToken = function () {
+    return jwt.sign({id: this._id}, config.secretHashKey, {
+        expiresIn: config.tokenExpiryTime
     });
 };
 
 // Generate and hash password token
-UserSchema.methods.getResetPasswordToken = function() {
+UserSchema.methods.getResetPasswordToken = function () {
     // Generate token
     const resetToken = crypto.randomBytes(20).toString('hex');
     // Hash token and set to resetPasswordToken field
@@ -83,5 +94,4 @@ UserSchema.methods.getResetPasswordToken = function() {
 
     return resetToken;
 };
-
 export default mongoose.model('User', UserSchema);

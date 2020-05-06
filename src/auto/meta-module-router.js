@@ -6,7 +6,7 @@ import {
     GetMetaModulesByIdHandler,
     UpdateMetaModulesByIdHandler,
     DeleteMetaModulesByIdHandler,
-    ClearAllMetaModules
+    ClearAllMetaModules, SoftDeleteMetaModulesByIdHandler
 } from "./controller/meta.module.controller";
 
 const router = express.Router();
@@ -20,16 +20,14 @@ router.route('/')
 router.route('/publish/:id')
     .put(PublishTheModule)
 
+
 router.route('/:id')
     .get(GetMetaModulesByIdHandler)
     .put(UpdateMetaModulesByIdHandler)
+
+router.route('/inactive/:id')
+    .delete(SoftDeleteMetaModulesByIdHandler)
+router.route('/fdelete/:id')
     .delete(DeleteMetaModulesByIdHandler)
-
-
-
-
-
-
-
 
 export default router;

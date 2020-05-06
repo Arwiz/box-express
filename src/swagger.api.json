@@ -205,6 +205,35 @@
         }
       }
     },
+    "/metamodules/inactive/{id}": {
+      "delete": {
+        "tags": [
+          "MetaModule"
+        ],
+        "summary": "Inactive module",
+        "description": "Inactive meta module.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of unpublished module",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid Id supplied"
+          },
+          "404": {
+            "description": "Module not found"
+          }
+        }
+      }
+    },
     "/auto": {
       "get": {
         "tags": [
@@ -366,7 +395,7 @@
     "/user/createWithList": {
       "post": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Creates list of users with given input array",
         "description": "",
@@ -399,7 +428,7 @@
     "/user/login": {
       "get": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Logs user into the system",
         "description": "",
@@ -452,7 +481,7 @@
     "/user/logout": {
       "get": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Logs out current logged in user session",
         "description": "",
@@ -472,7 +501,7 @@
     "/user/{username}": {
       "get": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Get user by user name",
         "description": "",
@@ -507,7 +536,7 @@
       },
       "put": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Updated user",
         "description": "This can only be done by the logged in user.",
@@ -545,7 +574,7 @@
       },
       "delete": {
         "tags": [
-          "user"
+          "Auth"
         ],
         "summary": "Delete user",
         "description": "This can only be done by the logged in user.",

@@ -31,6 +31,10 @@ const MetaModuleSchema = new Schema({
     fields:{
         type: [FieldSchema]
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -85,27 +85,16 @@ export const GetDataFromDynamicModule = asyncHandler(async (req, res, next) => {
 
 export const InsertDataInDynamicModule = asyncHandler(async (req, res, next) => {
     if (req.body) {
-
         const row = req.body;
         let dataUrl = req.url;
         dataUrl = dataUrl.replace(/\//gi, '');
         // Get The schema from the Collection
-        let moduleData = await MetaModule.find({moduleId: dataUrl});
-
-        if (moduleData && moduleData.length > 0) {
-            const foundDataModel = moduleData[0];
-            // Call Dynamic
-            const sch = schemaDesignFromMetaModule(foundDataModel);
-            const checkedThenGetDynamicModule = mongoose.models[foundDataModel.moduleName];
-            if (!checkedThenGetDynamicModule) {
-                next(Error('Module is not published..!'));
-                return;
-            }
-            const addStatus = await checkedThenGetDynamicModule.create(row);
-            res.status(201).json({success: true, data: addStatus})
+        const foundModel = await getDynamicModuleByUrl(dataUrl);
+        if (foundModel) {
+            const addStatus = await foundModel.create(row);
+            res.status(200).json({success: true, data: addStatus})
         } else
-            res.status(200).json({success: true, data: "Data Not Found"});
-
+            next(Error('Module not available or Not published'));
     } else {
         next(Error('Please provide data'));
     }
