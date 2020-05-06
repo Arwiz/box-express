@@ -10,8 +10,7 @@ import encrypt from '../../shared/helpers/encryption.helper'
 
 export const CreateUserHandler =  asyncHandler( async ( req, res)=> {
         let { firstName, lastName, email, roles, password } = req.body;
-        //password = await encrypt(password) ;
-        const  user = {firstName, lastName, email, roles , password};
+        const  user = {firstName, lastName, email, roles:["Client"] , password};
         const addUserStat = await User.create(user);
         res.status(201).json({success: true, data: addUserStat})
 });
@@ -19,7 +18,7 @@ export const CreateUserHandler =  asyncHandler( async ( req, res)=> {
 // @desc  Add User Handler Function
 export const GetAllUsersHandler =  async ( req, res)=> {
     try {
-        const results = await User.find({});
+        const results = await User.find({}).select(["-password", "-activeSession"]);
         console.log(results);
         res.status(200).json({success: true, data: results})
     } catch (e) {

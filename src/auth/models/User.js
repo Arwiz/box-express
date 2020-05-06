@@ -44,6 +44,7 @@ const UserSchema = new Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+    activeSession:[String],
 }, {
     versionKey: false // You should be aware of the outcome after set to false
 });
@@ -91,7 +92,7 @@ UserSchema.methods.getResetPasswordToken = function () {
         .digest('hex');
     // Set expire
     this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
-
     return resetToken;
 };
+
 export default mongoose.model('User', UserSchema);

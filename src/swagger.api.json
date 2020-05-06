@@ -425,7 +425,7 @@
         }
       }
     },
-    "/user/login": {
+    "/auth/login": {
       "get": {
         "tags": [
           "Auth"
@@ -439,16 +439,16 @@
         ],
         "parameters": [
           {
-            "name": "username",
+            "name": "email",
             "in": "query",
-            "description": "The user name for login",
+            "description": "The user Email for login",
             "required": true,
             "type": "string"
           },
           {
             "name": "password",
             "in": "query",
-            "description": "The password for login in clear text",
+            "description": "The password for login",
             "required": true,
             "type": "string"
           }
@@ -478,12 +478,12 @@
         }
       }
     },
-    "/user/logout": {
+    "/auth/logout": {
       "get": {
         "tags": [
           "Auth"
         ],
-        "summary": "Logs out current logged in user session",
+        "summary": "Logs out current session",
         "description": "",
         "operationId": "logoutUser",
         "produces": [
